@@ -306,4 +306,197 @@ mysql> select gender, count(gender) from payroll_service group by gender;
 
 ******************************************************************************************************************
 
+UC 8: Extend employee_payroll data to store employee information like employee phone, address and department
 
+mysql> alter table payroll_service add phone_number bigint after name;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table payroll_service add address varchar(50) after phone_number;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table payroll_service add department varchar(120) not null after address;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from payroll_service;
++----+--------+--------------+---------+------------+--------+---------+------------+
+| id | name   | phone_number | address | department | gender | salary  | start_date |
++----+--------+--------------+---------+------------+--------+---------+------------+
+| 10 | Azhar  |         NULL | NULL    |            | M      |  300000 | 2020-01-01 |
+| 11 | Ajju   |         NULL | NULL    |            | M      |  150000 | 2020-07-13 |
+| 12 | Simran |         NULL | NULL    |            | F      | 2000000 | 2021-12-12 |
++----+--------+--------------+---------+------------+--------+---------+------------+
+3 rows in set (0.00 sec)
+
+mysql> desc payroll_service;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(50)  | NO   |     | NULL    |                |
+| phone_number | bigint       | YES  |     | NULL    |                |
+| address      | varchar(50)  | YES  |     | NULL    |                |
+| department   | varchar(120) | NO   |     | NULL    |                |
+| gender       | char(1)      | YES  |     | NULL    |                |
+| salary       | double       | NO   |     | NULL    |                |
+| start_date   | date         | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+
+******************************************************************************************************************
+
+UC 9: Extend employee_payroll table to have Basic Pay, Deductions, Taxable Pay, Income Tax, Net Pay
+
+mysql> alter table payroll_service add basic_pay double not null after salary;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table payroll_service add deductions double not null after basic_pay;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table payroll_service add taxable_pay double not null after deductions;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table payroll_service add income_tax double not null after taxable_pay;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table payroll_service add net_pay double not null after income_tax;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc payroll_service;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(50)  | NO   |     | NULL    |                |
+| phone_number | bigint       | YES  |     | NULL    |                |
+| address      | varchar(50)  | YES  |     | NULL    |                |
+| department   | varchar(120) | NO   |     | NULL    |                |
+| gender       | char(1)      | YES  |     | NULL    |                |
+| salary       | double       | NO   |     | NULL    |                |
+| basic_pay    | double       | NO   |     | NULL    |                |
+| deductions   | double       | NO   |     | NULL    |                |
+| taxable_pay  | double       | NO   |     | NULL    |                |
+| income_tax   | double       | NO   |     | NULL    |                |
+| net_pay      | double       | NO   |     | NULL    |                |
+| start_date   | date         | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+13 rows in set (0.00 sec)
+
+mysql> select * from payroll_service;
++----+--------+--------------+---------+------------+--------+---------+-----------+------------+-------------+------------+---------+------------+
+| id | name   | phone_number | address | department | gender | salary  | basic_pay | deductions | taxable_pay | income_tax | net_pay | start_date |
++----+--------+--------------+---------+------------+--------+---------+-----------+------------+-------------+------------+---------+------------+
+| 10 | Azhar  |         NULL | NULL    |            | M      |  300000 |         0 |          0 |           0 |          0 |       0 | 2020-01-01 |
+| 11 | Ajju   |         NULL | NULL    |            | M      |  150000 |         0 |          0 |           0 |          0 |       0 | 2020-07-13 |
+| 12 | Simran |         NULL | NULL    |            | F      | 2000000 |         0 |          0 |           0 |          0 |       0 | 2021-12-12 |
++----+--------+--------------+---------+------------+--------+---------+-----------+------------+-------------+------------+---------+------------+
+3 rows in set (0.00 sec)
+
+******************************************************************************************************************
+
+UC 10: Make Terissa as part of Sales and Marketing Department
+
+mysql> insert into payroll_service(name, phone_number, address, department, gender, salary, basic_pay, deductions, taxable_pay, income_tax, net_pay, start_date) values( "Terrisa", null, null, "Marketing", 'F', 1000000, 0, 0, 0, 0, 0, "2022-05-01");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from payroll_service;
++----+---------+--------------+---------+------------+--------+---------+-----------+------------+-------------+------------+---------+------------+
+| id | name    | phone_number | address | department | gender | salary  | basic_pay | deductions | taxable_pay | income_tax | net_pay | start_date |
++----+---------+--------------+---------+------------+--------+---------+-----------+------------+-------------+------------+---------+------------+
+| 10 | Azhar   |         NULL | NULL    |            | M      |  300000 |         0 |          0 |           0 |          0 |       0 | 2020-01-01 |
+| 11 | Ajju    |         NULL | NULL    |            | M      |  150000 |         0 |          0 |           0 |          0 |       0 | 2020-07-13 |
+| 12 | Simran  |         NULL | NULL    |            | F      | 2000000 |         0 |          0 |           0 |          0 |       0 | 2021-12-12 |
+| 13 | Terrisa |         NULL | NULL    | Marketing  | F      | 1000000 |         0 |          0 |           0 |          0 |       0 | 2022-05-01 |
++----+---------+--------------+---------+------------+--------+---------+-----------+------------+-------------+------------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> show tables;
++---------------------------+
+| Tables_in_payroll_service |
++---------------------------+
+| payroll_service           |
++---------------------------+
+1 row in set (0.04 sec)
+
+mysql> create table company;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table company
+    -> (company_id int primary key,
+    -> company_name varchar(20) not null
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc company;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| company_id   | int         | NO   | PRI | NULL    |       |
+| company_name | varchar(20) | NO   |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into company(company_ID, company_name) values(100, 'Google');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from company;
++------------+--------------+
+| company_id | company_name |
++------------+--------------+
+|        100 | Google       |
++------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> create table employee;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table employee1;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table employee1(
+    -> id int unsigned not null auto_increment,
+    -> name varchar(10) not null,
+    -> salary double not null,
+    -> company_id int,
+    -> foreign key(company_id) references company(company_id),
+    -> primary key(id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc employee1;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(10)  | NO   |     | NULL    |                |
+| salary     | double       | NO   |     | NULL    |                |
+| company_id | int          | YES  | MUL | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> insert into employee1( name, salary, company_ID) values
+    -> ( 'Afifa', 50000, 786);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> select * from employee;
++----+--------+--------+------------+
+| id | name   | salary | company_ID |
++----+--------+--------+------------+
+|  1 | Afifa  |  50000 |        786 |
++----+--------+--------+------------+
+1 row in set (0.00 sec)
+
+mysql> show tables;
++---------------------------+
+| Tables_in_payroll_service |
++---------------------------+
+| company                   |
+| employee1                 |
+| payroll_service           |
++---------------------------+
+3 rows in set (0.04 sec)
+4 rows in set (0.00 sec)
